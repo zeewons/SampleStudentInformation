@@ -47,6 +47,16 @@ namespace CourseWork
         }
         public void Delete(int id)
         {
+            //invoking list method of the student class to get student list
+            List<Student> list = List();
+            //using linq to select student having the specified id
+            Student s = list.Where(x => x.Id == id).FirstOrDefault();
+            //removing  student object that is to be updated from the list
+            list.Remove(s);
+            //converting list of student to string
+            string data = JsonConvert.SerializeObject(list, Formatting.None);
+            //invoking method of utility class 
+            Utility.WriteToTextFile(_filePath, data, false);
         }
         public Student Detail(int id)
         {

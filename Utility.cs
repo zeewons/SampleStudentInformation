@@ -30,6 +30,7 @@ namespace CourseWork
             {
                 if (!append)
                 {
+                    //remove last bracket "]" from data passed
                     data = data.Trim().Substring(0,data.Trim().Length - 1);
                 }
 

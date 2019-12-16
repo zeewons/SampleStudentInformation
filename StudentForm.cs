@@ -43,7 +43,6 @@ namespace CourseWork
             DataTable dt = Utility.ConvertToDataTable(listStudents);
             dataGridStudents.DataSource = dt;
 
-
         }
         private void Clear()
         {
@@ -74,12 +73,11 @@ namespace CourseWork
 
         private void dataGridStudents_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
+            Student obj = new Student();
             if (e.ColumnIndex == 0)
             {
                 //get the value of the clicked rows id column
-                string value = dataGridStudents[1, e.RowIndex].Value.ToString();
-                Student obj = new Student();
+                string value = dataGridStudents[2, e.RowIndex].Value.ToString();
                 int id = 0;
                 if (String.IsNullOrEmpty(value))
                 {
@@ -101,6 +99,13 @@ namespace CourseWork
                     btnUpdate.Visible = true;
                 }
             }
+            else if (e.ColumnIndex == 1)
+            {  //get the value of the clicked rows id column
+                string value = dataGridStudents[2, e.RowIndex].Value.ToString();
+                obj.Delete(int.Parse(value));
+                BindGrid();
+
+            }
 
         }
 
@@ -120,10 +125,31 @@ namespace CourseWork
             BindGrid();
             Clear();
         }
+        private void BindChart(List<Student> lst)
+        {
+            var result = lst
+                .GroupBy(l => l.Gender)
+                .Select(cl => new
+                {
+                    Gender = cl.First().Gender,
+                    Count = cl.Count().ToString()
+                }).ToList();
+            DataTable dt = Utility.ConvertToDataTable(result);
+            chart1.DataSource = dt;
+            chart1.Series["Gender"].XValueMember = "Gender";
+            chart1.Series["Count"].YValueMembers = "Count";
+            this.chart1.Titles.Add("Weekly Enrollment Chart");
+
+        }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Clear();
+        }
+
+        private void chart1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
