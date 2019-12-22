@@ -31,15 +31,16 @@ namespace CourseWork
                 if (!append)
                 {
                     //remove opening bracket "[" from data passed
-                    data = data.Trim().Substring(1, data.Trim().Length);
+                    data = data.Trim().Substring(1, data.Trim().Length-1);
                     //remove last bracket "]" from data passed
                     data = data.Trim().Substring(0, data.Trim().Length - 1);
 
                 }
                 if (count != 0)
                 {
-                    writer.WriteLine(data + ",");
+                   data=data + ",";
                 }
+                writer.WriteLine(data);
             }
         }
         public static string ReadFromTextFile(string path)
