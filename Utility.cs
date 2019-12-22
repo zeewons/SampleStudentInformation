@@ -15,27 +15,31 @@ namespace CourseWork
 
         public static void Export() { }
         public static void Import() { }
-        public static void WriteToTextFile(string path, string data, bool append = true)
+        public static void WriteToTextFile(string path, string data, bool append = true, int count = 1)
         {
             if (!File.Exists(path))
             {
                 var file = File.Create(path);
                 file.Close();
-                using (StreamWriter writer = new StreamWriter(path, append: append))
-                {
-                    writer.WriteLine("[");
-                }
+                //using (StreamWriter writer = new StreamWriter(path, append: append))
+                //{
+                //    writer.WriteLine("[");
+                //}
             }
             using (StreamWriter writer = new StreamWriter(path, append: append))
             {
                 if (!append)
                 {
+                    //remove opening bracket "[" from data passed
+                    data = data.Trim().Substring(1, data.Trim().Length);
                     //remove last bracket "]" from data passed
-                    data = data.Trim().Substring(0,data.Trim().Length - 1);
+                    data = data.Trim().Substring(0, data.Trim().Length - 1);
+
                 }
-
-                writer.WriteLine(data + ",");
-
+                if (count != 0)
+                {
+                    writer.WriteLine(data + ",");
+                }
             }
         }
         public static string ReadFromTextFile(string path)
@@ -48,8 +52,11 @@ namespace CourseWork
                     data = r.ReadToEnd();
 
                 }
+                if (data != "")
+                {
+                    data = "[" + data + "]";
 
-                data += "]";
+                }
                 return data;
 
             }

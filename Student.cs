@@ -54,9 +54,10 @@ namespace CourseWork
             //removing  student object that is to be updated from the list
             list.Remove(s);
             //converting list of student to string
+            int count = list.Count;
             string data = JsonConvert.SerializeObject(list, Formatting.None);
             //invoking method of utility class 
-            Utility.WriteToTextFile(_filePath, data, false);
+            Utility.WriteToTextFile(_filePath, data, false,count);
         }
         public Student Detail(int id)
         {

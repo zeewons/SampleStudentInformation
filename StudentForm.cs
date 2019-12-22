@@ -18,6 +18,7 @@ namespace CourseWork
         {
             InitializeComponent();
             BindGrid();
+
             btnUpdate.Visible = false;
         }
 
@@ -42,7 +43,7 @@ namespace CourseWork
             List<Student> listStudents = obj.List();
             DataTable dt = Utility.ConvertToDataTable(listStudents);
             dataGridStudents.DataSource = dt;
-
+            BindChart(listStudents);
         }
         private void Clear()
         {
@@ -100,11 +101,19 @@ namespace CourseWork
                 }
             }
             else if (e.ColumnIndex == 1)
-            {  //get the value of the clicked rows id column
-                string value = dataGridStudents[2, e.RowIndex].Value.ToString();
-                obj.Delete(int.Parse(value));
-                BindGrid();
-
+            {
+                string message = "Do you want to Delete this Record?";
+                string title = "Delete Confirmation";
+                MessageBoxButtons buttons = MessageBoxButtons.OKCancel;
+                DialogResult result = MessageBox.Show(message, title, buttons);
+                if (result == DialogResult.OK)
+                {
+                    //get the value of the clicked rows id column
+                    string value = dataGridStudents[2, e.RowIndex].Value.ToString();
+                    obj.Delete(int.Parse(value));
+                    BindGrid();
+                    MessageBox.Show("Record Successfully Deleted");
+                }
             }
 
         }
@@ -124,22 +133,29 @@ namespace CourseWork
             obj.Edit(obj);
             BindGrid();
             Clear();
+            btnUpdate.Visible = false;
+            btnSubmit.Visible = true;
         }
         private void BindChart(List<Student> lst)
         {
-            var result = lst
-                .GroupBy(l => l.Gender)
-                .Select(cl => new
-                {
-                    Gender = cl.First().Gender,
-                    Count = cl.Count().ToString()
-                }).ToList();
-            DataTable dt = Utility.ConvertToDataTable(result);
-            chart1.DataSource = dt;
-            chart1.Series["Gender"].XValueMember = "Gender";
-            chart1.Series["Count"].YValueMembers = "Count";
-            this.chart1.Titles.Add("Weekly Enrollment Chart");
-
+            if (lst != null)
+            {
+                var result = lst
+                    .GroupBy(l => l.Gender)
+                    .Select(cl => new
+                    {
+                        Gender = cl.First().Gender,
+                        Count = cl.Count().ToString()
+                    }).ToList();
+                DataTable dt = Utility.ConvertToDataTable(result);
+                chart1.DataSource = dt;
+                chart1.Name = "Gender";
+                chart1.Series["Series1"].XValueMember = "Gender";
+                chart1.Series["Series1"].YValueMembers = "Count";
+                this.chart1.Titles.Remove(this.chart1.Titles.FirstOrDefault());
+                this.chart1.Titles.Add("Weekly Enrollment Chart");
+                chart1.Series["Series1"].IsValueShownAsLabel = true;
+            }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
